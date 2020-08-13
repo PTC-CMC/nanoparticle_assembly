@@ -1,0 +1,34 @@
+mol delrep 0 top
+mol addrep top
+mol modselect 0 top "name _CGN"
+mol modstyle 0 top VDW 0.6
+mol modmaterial 0 top Goodsell
+mol modcolor 0 top ColorID 7
+mol addrep top
+mol modselect 1 top "name _CGN2"
+mol modstyle 1 top VDW 0.6
+mol modmaterial 1 top Goodsell
+mol modcolor 1 top ColorID 21
+mol addrep top
+mol modselect 2 top "name _CGN2 _MMM _MME"
+mol modstyle 2 top CPK
+mol modmaterial 2 top AOEdgy
+mol modcolor 2 top ColorID 6
+axes location off
+pbc box -center origin -color black
+display ambientocclusion on
+display shadows on
+display depthcue off
+material change ambient AOEdgy 0.110000
+material change diffuse AOEdgy 1.000000
+material change specular AOEdgy 0.040000
+material change shininess AOEdgy 0.000000
+material change opacity AOEdgy 1.000000
+material change outline AOEdgy 2.980000
+material change outlinewidth AOEdgy 0.540000
+material change transmode AOEdgy 0.000000
+display resize 1200 800
+rotate x by 20
+rotate y by 20
+scale by 1
+pbc box -center origin -color black

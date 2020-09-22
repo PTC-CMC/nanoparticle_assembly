@@ -1,0 +1,101 @@
+,x,y,value
+0,Phase,Phase,1.0
+1,Phase,Coordination_number,0.8966906122258971
+2,Phase,Standard_deviation,0.7294506964536067
+3,Phase,Chain_length,-0.4285286713697913
+4,Phase,Chain_density,-0.11876794418614386
+5,Phase,fsa,0.45374720347492303
+6,Phase,sasa,0.8615738943860131
+7,Phase,Chain Radius of Gyration,0.23292002537081194
+8,Phase,NP Radius of Gyration,0.8337406838071112
+9,Phase,Asphericity,0.7466834236505453
+10,Coordination_number,Phase,0.8966906122258971
+11,Coordination_number,Coordination_number,0.9999999999999999
+12,Coordination_number,Standard_deviation,0.7449324324324322
+13,Coordination_number,Chain_length,-0.4987131450636583
+14,Coordination_number,Chain_density,-0.13883679279648783
+15,Coordination_number,fsa,0.4712009668953924
+16,Coordination_number,sasa,0.9375117447857377
+17,Coordination_number,Chain Radius of Gyration,0.2931131595987435
+18,Coordination_number,NP Radius of Gyration,0.9148057958027366
+19,Coordination_number,Asphericity,0.8339275808302279
+20,Standard_deviation,Phase,0.7294506964536067
+21,Standard_deviation,Coordination_number,0.7449324324324322
+22,Standard_deviation,Standard_deviation,0.9999999999999999
+23,Standard_deviation,Chain_length,-0.2805942134426062
+24,Standard_deviation,Chain_density,-0.02944417963692589
+25,Standard_deviation,fsa,0.5177646423064349
+26,Standard_deviation,sasa,0.7213360982698911
+27,Standard_deviation,Chain Radius of Gyration,0.11409270232780797
+28,Standard_deviation,NP Radius of Gyration,0.6656033144025244
+29,Standard_deviation,Asphericity,0.6841809090249801
+30,Chain_length,Phase,-0.4285286713697912
+31,Chain_length,Coordination_number,-0.4987131450636584
+32,Chain_length,Standard_deviation,-0.2805942134426062
+33,Chain_length,Chain_length,0.9999999999999999
+34,Chain_length,Chain_density,-0.1854427568880856
+35,Chain_length,fsa,0.3630455116394799
+36,Chain_length,sasa,-0.28153147796170575
+37,Chain_length,Chain Radius of Gyration,-0.8985447346900151
+38,Chain_length,NP Radius of Gyration,-0.6889799882607145
+39,Chain_length,Asphericity,-0.27034545229023155
+40,Chain_density,Phase,-0.11876794418614388
+41,Chain_density,Coordination_number,-0.13883679279648786
+42,Chain_density,Standard_deviation,-0.02944417963692589
+43,Chain_density,Chain_length,-0.1854427568880856
+44,Chain_density,Chain_density,0.9999999999999999
+45,Chain_density,fsa,-0.006177567427383539
+46,Chain_density,sasa,-0.16156332967595946
+47,Chain_density,Chain Radius of Gyration,0.3767149904427097
+48,Chain_density,NP Radius of Gyration,-0.24578782025440898
+49,Chain_density,Asphericity,0.18281903642146863
+50,fsa,Phase,0.45374720347492303
+51,fsa,Coordination_number,0.4712009668953924
+52,fsa,Standard_deviation,0.5177646423064349
+53,fsa,Chain_length,0.36304551163947996
+54,fsa,Chain_density,-0.00617756742738354
+55,fsa,fsa,0.9999999999999999
+56,fsa,sasa,0.6777305923315483
+57,fsa,Chain Radius of Gyration,-0.4379287396013331
+58,fsa,NP Radius of Gyration,0.2374594658903596
+59,fsa,Asphericity,0.6944200985655193
+60,sasa,Phase,0.8615738943860132
+61,sasa,Coordination_number,0.9375117447857378
+62,sasa,Standard_deviation,0.7213360982698911
+63,sasa,Chain_length,-0.28153147796170575
+64,sasa,Chain_density,-0.16156332967595946
+65,sasa,fsa,0.6777305923315483
+66,sasa,sasa,1.0
+67,sasa,Chain Radius of Gyration,0.11013133208255162
+68,sasa,NP Radius of Gyration,0.8257035647279551
+69,sasa,Asphericity,0.8977485928705442
+70,Chain Radius of Gyration,Phase,0.23292002537081194
+71,Chain Radius of Gyration,Coordination_number,0.2931131595987435
+72,Chain Radius of Gyration,Standard_deviation,0.11409270232780797
+73,Chain Radius of Gyration,Chain_length,-0.8985447346900151
+74,Chain Radius of Gyration,Chain_density,0.3767149904427097
+75,Chain Radius of Gyration,fsa,-0.43792873960133316
+76,Chain Radius of Gyration,sasa,0.11013133208255162
+77,Chain Radius of Gyration,Chain Radius of Gyration,1.0
+78,Chain Radius of Gyration,NP Radius of Gyration,0.4808630393996248
+79,Chain Radius of Gyration,Asphericity,0.16135084427767357
+80,NP Radius of Gyration,Phase,0.8337406838071112
+81,NP Radius of Gyration,Coordination_number,0.9148057958027366
+82,NP Radius of Gyration,Standard_deviation,0.6656033144025244
+83,NP Radius of Gyration,Chain_length,-0.6889799882607145
+84,NP Radius of Gyration,Chain_density,-0.245787820254409
+85,NP Radius of Gyration,fsa,0.2374594658903596
+86,NP Radius of Gyration,sasa,0.8257035647279551
+87,NP Radius of Gyration,Chain Radius of Gyration,0.4808630393996248
+88,NP Radius of Gyration,NP Radius of Gyration,1.0
+89,NP Radius of Gyration,Asphericity,0.6611632270168856
+90,Asphericity,Phase,0.7466834236505454
+91,Asphericity,Coordination_number,0.833927580830228
+92,Asphericity,Standard_deviation,0.6841809090249801
+93,Asphericity,Chain_length,-0.2703454522902315
+94,Asphericity,Chain_density,0.18281903642146863
+95,Asphericity,fsa,0.6944200985655193
+96,Asphericity,sasa,0.8977485928705442
+97,Asphericity,Chain Radius of Gyration,0.16135084427767357
+98,Asphericity,NP Radius of Gyration,0.6611632270168856
+99,Asphericity,Asphericity,1.0

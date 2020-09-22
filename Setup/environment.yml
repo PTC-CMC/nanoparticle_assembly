@@ -1,4 +1,4 @@
-name: simulation36
+name: patchy_np36
 channels:
   - conda-forge
   - omnia

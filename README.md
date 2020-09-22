@@ -1,6 +1,4 @@
-# nanoparticle_assembly
-
-This is the project repository for the work titled : #Examining the Self-Assembly of Patchy Alkane-Grafted Silica Nanoparticles using Molecular Simulation
+# This is the project repository for the work titled : Examining the Self-Assembly of Patchy Alkane-Grafted Silica Nanoparticles using Molecular Simulation
 
 Here contains the procedures used to produce the data and figures in this paper. Cloning this notebook, along with the relevant raw data available at Zenodo:DOI, will allow one to replicate all of the data extracted from the hoomd-blue trajectories. Unfortunately, due to updates to the hoomd-blue codebase, the actual simulation workflow cannot be replicated with the code provided here. It is still provided in order to provide relvant inputs that went into running those simulations.
 

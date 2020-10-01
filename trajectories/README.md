@@ -1,0 +1,1 @@
+This empty directory is where you should download and copy over your trajectory information. You should have two subdirectories here, bulk, and single_particle. Make sure the folders are unzipped as well, they should contain about 30 Gb of data between the two of them.

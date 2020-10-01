@@ -127,10 +127,8 @@ mie_chains = pair.mie(r_cut=cutoff_chains/ref_dist, nlist=nl_chains)
 mie_np = pair.mie(r_cut=cutoff_np/ref_dist, nlist=nl_np)
 mie_np_chain = pair.mie(r_cut=cutoff_cross/ref_dist, nlist=nl_np_chain)
 
-chain_particle_types = ['_MMM', '_MME', '_MMMA', '_MMEA']
-chain1_particle_types = ['_MMM', '_MME']
-chain2_particle_types = ['_MMMA', '_MMEA']
-particle_types = ['_CGN', '_MMM', '_MME', '_MMMA', '_MMEA']
+chain_particle_types = ['_MMM', '_MME']
+particle_types = ['_CGN', '_MMM', '_MME']
 
 epsilons = {'_MMM-_MMM': 0.389092, '_MME-_MME': 0.434996, '_MME-_MMM': 0.411404, '_CGN-_MMM': 0.6360,
             '_CGN-_MME': 0.6788, '_CGN-_CGN': 0.9286}
@@ -141,44 +139,6 @@ ns = {'_CGN-_MMM': 29.6574, '_CGN-_MME': 28.0821, '_MMM-_MMM': 9, '_MME-_MME': 9
 ms = {'_CGN-_MMM': 5.5835, '_CGN-_MME': 5.6179, '_MMM-_MMM': 6, '_MME-_MME': 6, '_MME-_MMM': 6,
       '_CGN-_CGN': 4.7578}
 
-epsilons['_MMMA-_MMMA'] = epsilons['_MMM-_MMM'] * epsilon_factor
-epsilons['_MMEA-_MMEA'] = epsilons['_MME-_MME'] * epsilon_factor
-epsilons['_MMEA-_MMMA'] = epsilons['_MME-_MMM'] * epsilon_factor
-sigmas['_MMMA-_MMMA'] = sigmas['_MMM-_MMM']
-sigmas['_MMEA-_MMEA'] = sigmas['_MME-_MME']
-sigmas['_MMEA-_MMMA'] = sigmas['_MME-_MMM']
-ns['_MMMA-_MMMA'] = ns['_MMM-_MMM']
-ns['_MMEA-_MMEA'] = ns['_MME-_MME']
-ns['_MMEA-_MMMA'] = ns['_MME-_MMM']
-ms['_MMMA-_MMMA'] = ms['_MMM-_MMM']
-ms['_MMEA-_MMEA'] = ms['_MME-_MME']
-ms['_MMEA-_MMMA'] = ms['_MME-_MMM']
-epsilons['_CGN-_MMMA'] = epsilons['_CGN-_MMM'] * epsilon_factor
-epsilons['_CGN-_MMEA'] = epsilons['_CGN-_MME'] * epsilon_factor
-sigmas['_CGN-_MMMA'] = sigmas['_CGN-_MMM']
-sigmas['_CGN-_MMEA'] = sigmas['_CGN-_MME']
-ns['_CGN-_MMMA'] = ns['_CGN-_MMM']
-ns['_CGN-_MMEA'] = ns['_CGN-_MME']
-ms['_CGN-_MMMA'] = ms['_CGN-_MMM']
-ms['_CGN-_MMEA'] = ms['_CGN-_MME']
-
-epsilons['_MMM-_MMMA'] = (epsilons['_MMM-_MMM'] * epsilons['_MMMA-_MMMA']) ** 0.5
-epsilons['_MME-_MMEA'] = (epsilons['_MME-_MME'] * epsilons['_MMEA-_MMEA']) ** 0.5
-epsilons['_MMEA-_MMM'] = (epsilons['_MME-_MMM'] * epsilons['_MMEA-_MMMA']) ** 0.5
-epsilons['_MME-_MMMA'] = (epsilons['_MME-_MMM'] * epsilons['_MMEA-_MMMA']) ** 0.5
-sigmas['_MMM-_MMMA'] = (sigmas['_MMM-_MMM'] + sigmas['_MMMA-_MMMA']) / 2
-sigmas['_MME-_MMEA'] = (sigmas['_MME-_MME'] + sigmas['_MMEA-_MMEA']) / 2
-sigmas['_MMEA-_MMM'] = (sigmas['_MME-_MMM'] + sigmas['_MMEA-_MMMA']) / 2
-sigmas['_MME-_MMMA'] = (sigmas['_MME-_MMM'] + sigmas['_MMEA-_MMMA']) / 2
-ns['_MMM-_MMMA'] = ns['_MMM-_MMM']
-ns['_MME-_MMEA'] = ns['_MME-_MME']
-ns['_MMEA-_MMM'] = ns['_MME-_MMM']
-ns['_MME-_MMMA'] = ns['_MME-_MMM']
-ms['_MMM-_MMMA'] = ms['_MMM-_MMM']
-ms['_MME-_MMEA'] = ms['_MME-_MME']
-ms['_MMEA-_MMM'] = ms['_MME-_MMM']
-ms['_MME-_MMMA'] = ms['_MME-_MMM']
-
 for type1, type2 in itertools.combinations_with_replacement(particle_types, r=2):
 
     type1, type2 = sorted((type1, type2))
@@ -186,32 +146,21 @@ for type1, type2 in itertools.combinations_with_replacement(particle_types, r=2)
 
     # Set chain-chain interactions
     if type1 in chain_particle_types and type2 in chain_particle_types:
-        if (type1 in chain1_particle_types and type2 in chain1_particle_types):
-            mie_chains.pair_coeff.set(type1, type2, epsilon=epsilons[type1 + '-' + type2] / ref_energy,
-                                      sigma=sigmas[type1 + '-' + type2] / ref_dist, n=ns[type1 + '-' + type2],
-                                      m=ms[type1 + '-' + type2],
-                                      r_cut=potential_cutoff(ns[type1 + '-' + type2], ms[type1 + '-' + type2],
-                                      sigmas[type1 + '-' + type2]/ref_dist)) 
-        else:
-            mie_chains.pair_coeff.set(type1, type2, epsilon=epsilons[type1 + '-' + type2] / ref_energy,
-                                      sigma=sigmas[type1 + '-' + type2] / ref_dist, n=ns[type1 + '-' + type2],
-                                      m=ms[type1 + '-' + type2])
-
+        mie_chains.pair_coeff.set(type1, type2, epsilon=epsilons[type1 + '-' + type2] / ref_energy,
+                                  sigma=sigmas[type1 + '-' + type2] / ref_dist, n=ns[type1 + '-' + type2],
+                                  m=ms[type1 + '-' + type2],
+                                  r_cut=potential_cutoff(ns[type1 + '-' + type2], ms[type1 + '-' + type2],
+                                  sigmas[type1 + '-' + type2]/ref_dist)) 
     else:
         mie_chains.pair_coeff.set(type1, type2, epsilon=0.0, sigma=0.0, n=ns[type1 + '-' + type2],
                                   m=ms[type1 + '-' + type2], r_cut=False)
 
 
     if type1 not in chain_particle_types and type2 in chain_particle_types:
-        if type2 in chain1_particle_types:
-             mie_np_chain.pair_coeff.set(type1, type2, epsilon=epsilons[type1 + '-' + type2] / ref_energy,
-                                         sigma=sigmas[type1 + '-' + type2] / ref_dist, n=ns[type1 + '-' + type2],
-                                         m=ms[type1 + '-' + type2], r_cut=potential_cutoff(ns[type1 + '-' + type2],
-                                         ms[type1 + '-' + type2], sigmas[type1 + '-' + type2]/ref_dist))
-        else:
-            mie_np_chain.pair_coeff.set(type1, type2, epsilon=epsilons[type1 + '-' + type2] / ref_energy,
-                                        sigma=sigmas[type1 + '-' + type2] / ref_dist, n=ns[type1 + '-' + type2],
-                                        m=ms[type1 + '-' + type2])
+        mie_np_chain.pair_coeff.set(type1, type2, epsilon=epsilons[type1 + '-' + type2] / ref_energy,
+                                    sigma=sigmas[type1 + '-' + type2] / ref_dist, n=ns[type1 + '-' + type2],
+                                    m=ms[type1 + '-' + type2], r_cut=potential_cutoff(ns[type1 + '-' + type2],
+                                    ms[type1 + '-' + type2], sigmas[type1 + '-' + type2]/ref_dist))
     else:
         mie_np_chain.pair_coeff.set(type1, type2, epsilon=0.0, sigma=0.0, n=ns[type1 + '-' + type2],
                                     m=ms[type1 + '-' + type2], r_cut=False)
@@ -227,14 +176,10 @@ for type1, type2 in itertools.combinations_with_replacement(particle_types, r=2)
 harmonic_bond = bond.harmonic()
 harmonic_bond.bond_coeff.set('_MMM-_MMM', k=1232.1/(ref_energy/(ref_dist**2)), r0=0.364/ref_dist)
 harmonic_bond.bond_coeff.set('_MME-_MMM', k=1232.1/(ref_energy/(ref_dist**2)), r0=0.365/ref_dist)
-harmonic_bond.bond_coeff.set('_MMMA-_MMMA', k=1232.1/(ref_energy/(ref_dist**2)), r0=0.364/ref_dist)
-harmonic_bond.bond_coeff.set('_MMEA-_MMMA', k=1232.1/(ref_energy/(ref_dist**2)), r0=0.365/ref_dist)
 
 harmonic_angle = angle.harmonic()
 harmonic_angle.set_coeff('_MMM-_MMM-_MMM', k=2.3846/ref_energy, t0=3.01942)
 harmonic_angle.set_coeff('_MME-_MMM-_MMM', k=2.3846/ref_energy, t0=3.05433)
-harmonic_angle.set_coeff('_MMMA-_MMMA-_MMMA', k=2.3846/ref_energy, t0=3.01942)
-harmonic_angle.set_coeff('_MMEA-_MMMA-_MMMA', k=2.3846/ref_energy, t0=3.05433)
 '''
 ##### Perform an energy minimization #####
 ------------------------------------------

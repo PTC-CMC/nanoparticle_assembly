@@ -48,7 +48,7 @@ def HeatMap(arr1,name1,arr2,name2,constant,namec,df_single_np):
     for i in range(Y.shape[0]):
         for j in range(Y.shape[1]):
             val = df_single_np[(df_single_np[name1]==X[i,j]) & (df_single_np[name2]==Y[i,j])
-                        & (np.round(df_single_np[namec],2)==constant)]['sasa']
+                        & (np.round(df_single_np[namec],2)==constant)]['fSASA']
             if len(val):
                 Z[i,j] = val.values[0]
     return Z
@@ -85,20 +85,15 @@ def Plot_Heatmaps(chainlength,chain_density,fsa,df_single_np,df,cmap,inter):
     axes[0].set_autoscale_on(True)
     axes[1].set_autoscale_on(True)
     axes[2].set_autoscale_on(True)
-    
-    #viridis = cm.get_cmap('magma', 256)
-    #newcolors = viridis(np.linspace(0, 1, 256))
-    #pink = np.array([248/256, 24/256, 148/256, 1])
-    #newcolors[76:80, :] = pink
-    #newcolors[150:169, :] = pink
-    #newcmp = ListedColormap(newcolors)
-    sasa = HeatMap(fsa,'fsa',chain_density,'chain_density',18,'chainlength',df_single_np)/(4/3*np.pi*2.5**2)
-    norm = mpl.colors.Normalize(vmin=np.min(sasa), vmax=np.max(sasa), clip=False)
+
+    df_range =  df.loc[df['fSASA']>0]
+    norm = mpl.colors.Normalize(vmin=np.min(df_range['fSASA'].values), 
+                                vmax=np.max(df_range['fSASA'].values), clip=True)
     
     index=0
-    axes[index].set_xlabel('Fractional surface area')
-    axes[index].set_ylabel('Chain density, chains / nm^2')
-    Z = HeatMap(fsa,'fsa',chain_density,'chain_density',18,'chainlength',df_single_np)/(4/3*np.pi*2.5**2)
+    axes[index].set_xlabel('Fractional Surface Area')
+    axes[index].set_ylabel('Chain Density, chains / nm^2')
+    Z = HeatMap(fsa,'fsa',chain_density,'chain_density',6,'chainlength',df_single_np)
     heatmap = axes[index].imshow(Z, cmap=cmap, interpolation=inter, origin='lower',
                                  aspect="auto",alpha = 1,
                                  extent=[min(fsa), max(fsa)+0.03, min(chain_density), max(chain_density)], 
@@ -109,8 +104,8 @@ def Plot_Heatmaps(chainlength,chain_density,fsa,df_single_np,df,cmap,inter):
     booleans_str=[]
     booleans_agg=[]
     booleans=[]
-    fixed_cl=18
-    for cl in df.Chain_length:
+    fixed_cl=6
+    for cl in df['Chain Length'].values:
         if cl==fixed_cl:
             booleans.append(True)
         else:
@@ -132,24 +127,24 @@ def Plot_Heatmaps(chainlength,chain_density,fsa,df_single_np,df,cmap,inter):
     dis = pandas.Series(np.logical_and(booleans,booleans_dis))
     stringy = pandas.Series(np.logical_and(booleans,booleans_str))
     agg = pandas.Series(np.logical_and(booleans,booleans_agg))
-    axes[index].scatter(df[stringy].fsa,df[stringy].Chain_density,
+    axes[index].scatter(df[stringy]['FSA'],df[stringy]['Chain Density'],
                         marker='o',color='purple',edgecolors = 'white',s=markersize,linewidth=1.5)
-    axes[index].scatter(df[agg].fsa,df[agg].Chain_density,marker='v',color='red',edgecolors = 'white',s=markersize,linewidth=1.5)
-    axes[index].scatter(df[dis].fsa,df[dis].Chain_density,marker='s',color='k',edgecolors = 'white',s=markersize,linewidth=1.5)
-    axes[index].set_title('Chainlength='+ str(fixed_cl) + ' Carbons')
+    axes[index].scatter(df[agg]['FSA'],df[agg]['Chain Density'],marker='v',color='red',edgecolors = 'white',s=markersize,linewidth=1.5)
+    axes[index].scatter(df[dis]['FSA'],df[dis]['Chain Density'],marker='s',color='k',edgecolors = 'white',s=markersize,linewidth=1.5)
+    axes[index].set_title('Chain Length='+ str(fixed_cl) + ' beads')
     axes[index].set_xlim(0.19,0.66)
     axes[index].set_ylim(2.45,4.55)
 
     index=1
     axes[index].set_xlabel('Fractional surface area')
     axes[index].set_ylabel('Chain length')
-    Z = HeatMap(fsa,'fsa',chainlength,'chainlength',3.5,'chain_density',df_single_np)/(4/3*np.pi*2.5**2)
+    Z = HeatMap(fsa,'fsa',chainlength,'chainlength',3.5,'chain_density',df_single_np)
     heatmap = axes[index].imshow(Z, cmap=cmap, interpolation=inter, origin='lower',
                         extent=[min(fsa), max(fsa)+0.03, min(chainlength)-1,
                         max(chainlength)+1], aspect="auto",alpha = 1,norm=norm)
     booleans=[]
     fixed_cd=3.5
-    for cd in df.Chain_density:
+    for cd in df['Chain Density'].values:
         if cd==fixed_cd:
             booleans.append(True)
         else:
@@ -157,27 +152,27 @@ def Plot_Heatmaps(chainlength,chain_density,fsa,df_single_np,df,cmap,inter):
     dis = pandas.Series(np.logical_and(booleans,booleans_dis))
     stringy = pandas.Series(np.logical_and(booleans,booleans_str))
     agg = pandas.Series(np.logical_and(booleans,booleans_agg))
-    axes[index].scatter(df[stringy].fsa,df[stringy].Chain_length,marker='o',
+    axes[index].scatter(df[stringy]['FSA'],df[stringy]['Chain Length'],marker='o',
                         color='purple',edgecolors = 'white',s=markersize,linewidth=1.5)
-    axes[index].scatter(df[agg].fsa,df[agg].Chain_length,marker='v',color='red',
+    axes[index].scatter(df[agg]['FSA'],df[agg]['Chain Length'],marker='v',color='red',
                         edgecolors = 'white',s=markersize,linewidth=1.5)
-    axes[index].scatter(df[dis].fsa,df[dis].Chain_length,marker='s',color='k',
+    axes[index].scatter(df[dis]['FSA'],df[dis]['Chain Length'],marker='s',color='k',
                         edgecolors = 'white',s=markersize,linewidth=1.5)
-    axes[index].set_title('Chaindensity='+ str(fixed_cd) + ' Chains / nm^2')
+    axes[index].set_title('Chain Density='+ str(fixed_cd) + ' Chains / nm^2')
     axes[index].set_xlim(0.19,0.66)
-    axes[index].set_ylim(14,34)
+    axes[index].set_ylim(4.67,11.33)
 
 
     index=2
     axes[index].set_xlabel('Chain density, chains / nm^2')
     axes[index].set_ylabel('Chain length')
-    Z = HeatMap(chain_density,'chain_density',chainlength,'chainlength',0.55,'fsa',df_single_np)/(4/3*np.pi*2.5**2)
+    Z = HeatMap(chain_density,'chain_density',chainlength,'chainlength',0.55,'fsa',df_single_np)
     heatmap = axes[index].imshow(Z, cmap=cmap, interpolation=inter, origin='lower',
                         extent=[min(chain_density), max(chain_density), min(chainlength)-1,
                         max(chainlength)+1], aspect="auto",alpha = 1,norm=norm)
     booleans=[]
     fixed_fsa=0.55
-    for frac in df.fsa:
+    for frac in df['FSA'].values:
         if frac==fixed_fsa:
             booleans.append(True)
         else:
@@ -185,25 +180,25 @@ def Plot_Heatmaps(chainlength,chain_density,fsa,df_single_np,df,cmap,inter):
     dis = pandas.Series(np.logical_and(booleans,booleans_dis))
     stringy = pandas.Series(np.logical_and(booleans,booleans_str))
     agg = pandas.Series(np.logical_and(booleans,booleans_agg))
-    axes[index].scatter(df[stringy].Chain_density,df[stringy].Chain_length,marker='o',
-                        color='purple',label='Stringy',edgecolors = 'white',s=markersize,linewidth=1.5)
-    axes[index].scatter(df[agg].Chain_density,df[agg].Chain_length,marker='v',
-                        color='red',label='Aggregated',edgecolors = 'white',s=markersize,linewidth=1.5)
-    axes[index].scatter(df[dis].Chain_density,df[dis].Chain_length,marker='s',
-                        color='k',label='Dispersed',edgecolors = 'white',s=markersize,linewidth=1.5)
-    axes[index].set_title('Fsa='+ str(fixed_fsa))
+    axes[index].scatter(df[stringy]['Chain Density'],df[stringy]['Chain Length'],marker='o',
+                        color='purple',edgecolors = 'white',s=markersize,linewidth=1.5)
+    axes[index].scatter(df[agg]['Chain Density'],df[agg]['Chain Length'],marker='v',color='red',
+                        edgecolors = 'white',s=markersize,linewidth=1.5)
+    axes[index].scatter(df[dis]['Chain Density'],df[dis]['Chain Length'],marker='s',color='k',
+                        edgecolors = 'white',s=markersize,linewidth=1.5)
+    axes[index].set_title('FSA='+ str(fixed_fsa))
     axes[index].set_xlim(2.45,4.55)
-    axes[index].set_ylim(14,34)
+    axes[index].set_ylim(4.67,11.33)
 
     cb = figs.colorbar(heatmap,cax=axes[3])
-    cb.set_label('Solvent-accessible surface area')
+    cb.set_label('Fractional Solvent-accessible surface area')
     plt.tight_layout()
-    plt.savefig('Figures/heatmap-boundaries-SASA')
+    plt.savefig('../Figures/heatmap-inter-SASA.pdf',dpi=600)
     
 def Plot_Fixed_Fsa(df,fixed_fsa):
     markersize=100
     booleans=[]
-    for fsa in df.fsa:
+    for fsa in df.FSA:
         if fsa==fixed_fsa:
             booleans.append(True)
         else:
@@ -212,24 +207,22 @@ def Plot_Fixed_Fsa(df,fixed_fsa):
     fig,axes=plt.subplots(figsize=(4,4))
     axes.set_xbound(2,5)
     axes.set_ybound(2,5)
-    axes.set_ylim(14,34)
+    axes.set_ylim(4.67,11.33)
     axes.set_xlim(2.45,4.55)
-    axes.scatter(df[stringy].Chain_density,df[stringy].Chain_length,marker='o',
-                 label='Stringy',s=markersize,edgecolors = 'k',color='purple',linewidth=1)
-    axes.scatter(df[agg].Chain_density,df[agg].Chain_length,marker='v',
-                 label='Aggregated',s=markersize,edgecolors = 'k',color='red',linewidth=1)
-    axes.scatter(df[dis].Chain_density,df[dis].Chain_length,marker='s',
-                 label='Dispersed',s=markersize,edgecolors = 'k',color='k',linewidth=1)
-    axes.set_title('Fsa='+ str(fixed_fsa))
-    axes.set_xlabel('chain density, chains/nm')
-    axes.set_ylabel('chain length, # atoms')
+    axes.scatter(df[stringy]['Chain Density'],df[stringy]['Chain Length'],marker='o',
+                 s=markersize,edgecolors = 'k',color='purple',linewidth=1)
+    axes.scatter(df[agg]['Chain Density'],df[agg]['Chain Length'],marker='v',s=markersize,edgecolors = 'k',color='red',linewidth=1)
+    axes.scatter(df[dis]['Chain Density'],df[dis]['Chain Length'],marker='s',s=markersize,edgecolors = 'k',color='k',linewidth=1)
+    axes.set_title('FSA='+ str(fixed_fsa))
+    axes.set_xlabel('Chain Density, chains/nm')
+    axes.set_ylabel('Chain Length, # beads')
     axes.legend()
-    plt.savefig('Figures/fix_fsa.pdf')
+    plt.savefig('../Figures/fix_fsa.pdf')
     
 def Plot_Fixed_Cd(df,fixed_cd):
     markersize=100
     booleans=[]
-    for chain_density in df.Chain_density:
+    for chain_density in df['Chain Density'].values:
         if chain_density==fixed_cd:
             booleans.append(True)
         else:
@@ -239,25 +232,25 @@ def Plot_Fixed_Cd(df,fixed_cd):
     axes.set_xbound(2,5)
     axes.set_ybound(2,5)
     axes.set_xlim(0.19,0.66)
-    axes.set_ylim(14,34)
-    axes.scatter(df[stringy].fsa,df[stringy].Chain_length,marker='o',
+    axes.set_ylim(4.67,11.33)
+    axes.scatter(df[stringy]['FSA'],df[stringy]['Chain Length'],marker='o',
                  s=markersize,edgecolors = 'k',color='purple',linewidth=1)
-    axes.scatter(df[agg].fsa,df[agg].Chain_length,marker='v',s=markersize,edgecolors = 'k',color='red',linewidth=1)
-    axes.scatter(df[dis].fsa,df[dis].Chain_length,marker='s',s=markersize,edgecolors = 'k',color='k',linewidth=1)
-    axes.set_title('Chaindensity='+ str(fixed_cd))
-    axes.set_xlabel('fsa')
-    axes.set_ylabel('chain length, # atoms')
-    plt.savefig('Figures/fix_cd.pdf')
+    axes.scatter(df[agg]['FSA'],df[agg]['Chain Length'],marker='v',s=markersize,edgecolors = 'k',color='red',linewidth=1)
+    axes.scatter(df[dis]['FSA'],df[dis]['Chain Length'],marker='s',s=markersize,edgecolors = 'k',color='k',linewidth=1)
+    axes.set_title('Chain Density='+ str(fixed_cd))
+    axes.set_xlabel('FSA')
+    axes.set_ylabel('Chain Length, # beads')
+    plt.savefig('../Figures/fix_cd.pdf')
     
 def Plot_Fixed_Cl(df,fixed_cl):
     markersize=100
     booleans=[]
-    for chain_length in df.Chain_length:
+    for chain_length in df['Chain Length'].values:
         if chain_length==fixed_cl:
             booleans.append(True)
         else:
             booleans.append(False)
-    dis,stringy,agg = Determine_Phase(df,booleans)        
+    dis,stringy,agg = Determine_Phase(df,booleans)     
     cl18 = pandas.Series(booleans)
 
     fig,axes=plt.subplots(figsize=(4,4))
@@ -265,14 +258,14 @@ def Plot_Fixed_Cl(df,fixed_cl):
     axes.set_ybound(2,5)
     axes.set_xlim(0.2,0.66)
     axes.set_ylim(2.45,4.55)
-    axes.scatter(df[stringy].fsa,df[stringy].Chain_density,marker='o',
+    axes.scatter(df[stringy]['FSA'],df[stringy]['Chain Density'],marker='o',
                  s=markersize,edgecolors = 'k',color='purple',linewidth=1)
-    axes.scatter(df[agg].fsa,df[agg].Chain_density,marker='v',s=markersize,edgecolors = 'k',color='red',linewidth=1)
-    axes.scatter(df[dis].fsa,df[dis].Chain_density,marker='s',s=markersize,edgecolors = 'k',color='k',linewidth=1)
-    axes.set_title('Chainlength='+ str(fixed_cl))
-    axes.set_xlabel('Fsa')
+    axes.scatter(df[agg]['FSA'],df[agg]['Chain Density'],marker='v',s=markersize,edgecolors = 'k',color='red',linewidth=1)
+    axes.scatter(df[dis]['FSA'],df[dis]['Chain Density'],marker='s',s=markersize,edgecolors = 'k',color='k',linewidth=1)
+    axes.set_title('Chain Length='+ str(fixed_cl))
+    axes.set_xlabel('FSA')
     axes.set_ylabel('Chain Density, chains/nm')
-    plt.savefig('Figures/fix_cl.pdf')
+    plt.savefig('../Figures/fix_cl.pdf')
     
 def Determine_Phase(df,booleans):
     booleans_dis=[]
@@ -407,34 +400,38 @@ def Plot_All_Phases(attribute,df,bins):
     #plt.legend(title='Phase',fontsize=8)
     plt.xlabel(attribute)
     plt.ylabel('Normalized Phase')
-    plt.savefig('Figures/histogram-' + attribute +'.pdf')
+    plt.savefig('../Figures/histogram-' + attribute +'.pdf')
     plt.show()
     
-def Plot_Heatmaps_all(chainlength,chain_density,fsa,df_single_np,df,name_ovrlay,cmap,inter):
+def Plot_Heatmaps_all(chainlength,chain_density,fsa,df_single_np,df,name_overlay,cmap,inter):
+    markersize=100
     figs, axes = plt.subplots(1,4,figsize=(13,4),gridspec_kw={"width_ratios":[1, 1,1,0.05]})
-    figs.set_clip_on(False)
+    #figs.set_clip_on(False)
+    #axes[0].set_clip_on(False)
     axes[0].set_autoscale_on(True)
     axes[1].set_autoscale_on(True)
     axes[2].set_autoscale_on(True)
     
-    #zarray = HeatMap_all(fsa,'fsa',chain_density,'chain_density',18,'chainlength',df_single_np,name_ovrlay)
-    #df_single_np[name_ovrlay]
-    norm = mpl.colors.Normalize(vmin=df_single_np[name_ovrlay].min(), vmax=df_single_np[name_ovrlay].max(), clip=False)
-
+    df_range =  df.loc[df['fSASA']>0]
+    norm = mpl.colors.Normalize(vmin=np.min(df_range[name_overlay].values), 
+                                vmax=np.max(df_range[name_overlay].values), clip=False)
+    
     index=0
-    axes[index].set_xlabel('Fractional surface area')
-    axes[index].set_ylabel('Chain density, chains / nm^2')
-    Z = HeatMap_all(fsa,'fsa',chain_density,'chain_density',18,'chainlength',df_single_np,name_ovrlay)
+    axes[index].set_xlabel('Fractional Surface Area')
+    axes[index].set_ylabel('Chain Density, chains / nm^2')
+    Z = HeatMap_all(fsa,'fsa',chain_density,'chain_density',6,'chainlength',df_single_np,name_overlay)
     heatmap = axes[index].imshow(Z, cmap=cmap, interpolation=inter, origin='lower',
-                        extent=[min(fsa), max(fsa)+.01, min(chain_density),
-                        max(chain_density)], aspect="auto",alpha = 1,norm=norm)
+                                 aspect="auto",alpha = 1,
+                                 extent=[min(fsa), max(fsa)+0.03, min(chain_density), max(chain_density)], 
+                                 norm=norm)
+    #,vmin=np.min(sasa),vmax=np.max(sasa))
 
     booleans_dis=[]
     booleans_str=[]
     booleans_agg=[]
     booleans=[]
-    fixed_cl=18
-    for cl in df.Chain_length:
+    fixed_cl=6
+    for cl in df['Chain Length'].values:
         if cl==fixed_cl:
             booleans.append(True)
         else:
@@ -456,26 +453,24 @@ def Plot_Heatmaps_all(chainlength,chain_density,fsa,df_single_np,df,name_ovrlay,
     dis = pandas.Series(np.logical_and(booleans,booleans_dis))
     stringy = pandas.Series(np.logical_and(booleans,booleans_str))
     agg = pandas.Series(np.logical_and(booleans,booleans_agg))
-    axes[index].scatter(df[stringy].fsa,df[stringy].Chain_density,marker='o',color='yellow',edgecolors = 'k')
-    axes[index].scatter(df[agg].fsa,df[agg].Chain_density,marker='v',color='k',edgecolors = 'k')
-    axes[index].scatter(df[dis].fsa,df[dis].Chain_density,marker='s',color='orange',edgecolors = 'k')
-    axes[index].set_title('Chainlength='+ str(fixed_cl) + ' Carbons')
+    axes[index].scatter(df[stringy]['FSA'],df[stringy]['Chain Density'],
+                        marker='o',color='purple',edgecolors = 'white',s=markersize,linewidth=1.5)
+    axes[index].scatter(df[agg]['FSA'],df[agg]['Chain Density'],marker='v',color='red',edgecolors = 'white',s=markersize,linewidth=1.5)
+    axes[index].scatter(df[dis]['FSA'],df[dis]['Chain Density'],marker='s',color='k',edgecolors = 'white',s=markersize,linewidth=1.5)
+    axes[index].set_title('Chain Length='+ str(fixed_cl) + ' beads')
     axes[index].set_xlim(0.19,0.66)
     axes[index].set_ylim(2.45,4.55)
-
-
-
 
     index=1
     axes[index].set_xlabel('Fractional surface area')
     axes[index].set_ylabel('Chain length')
-    Z = HeatMap_all(fsa,'fsa',chainlength,'chainlength',3.5,'chain_density',df_single_np,name_ovrlay)
+    Z = HeatMap_all(fsa,'fsa',chainlength,'chainlength',3.5,'chain_density',df_single_np,name_overlay)
     heatmap = axes[index].imshow(Z, cmap=cmap, interpolation=inter, origin='lower',
-                        extent=[min(fsa), max(fsa)+.01, min(chainlength)-.5,
-                        max(chainlength)+.5], aspect="auto",alpha = 1,norm=norm)
+                        extent=[min(fsa), max(fsa)+0.03, min(chainlength)-1,
+                        max(chainlength)+1], aspect="auto",alpha = 1,norm=norm)
     booleans=[]
     fixed_cd=3.5
-    for cd in df.Chain_density:
+    for cd in df['Chain Density'].values:
         if cd==fixed_cd:
             booleans.append(True)
         else:
@@ -483,30 +478,27 @@ def Plot_Heatmaps_all(chainlength,chain_density,fsa,df_single_np,df,name_ovrlay,
     dis = pandas.Series(np.logical_and(booleans,booleans_dis))
     stringy = pandas.Series(np.logical_and(booleans,booleans_str))
     agg = pandas.Series(np.logical_and(booleans,booleans_agg))
-    axes[index].scatter(df[stringy].fsa,df[stringy].Chain_length,marker='o',color='yellow',edgecolors = 'k')
-    axes[index].scatter(df[agg].fsa,df[agg].Chain_length,marker='v',color='k',edgecolors = 'k')
-    axes[index].scatter(df[dis].fsa,df[dis].Chain_length,marker='s',color='orange',edgecolors = 'k')
-    axes[index].set_title('Chaindensity='+ str(fixed_cd) + ' Chains / nm^2')
+    axes[index].scatter(df[stringy]['FSA'],df[stringy]['Chain Length'],marker='o',
+                        color='purple',edgecolors = 'white',s=markersize,linewidth=1.5)
+    axes[index].scatter(df[agg]['FSA'],df[agg]['Chain Length'],marker='v',color='red',
+                        edgecolors = 'white',s=markersize,linewidth=1.5)
+    axes[index].scatter(df[dis]['FSA'],df[dis]['Chain Length'],marker='s',color='k',
+                        edgecolors = 'white',s=markersize,linewidth=1.5)
+    axes[index].set_title('Chain Density='+ str(fixed_cd) + ' Chains / nm^2')
     axes[index].set_xlim(0.19,0.66)
-    axes[index].set_ylim(14.5,33.5)
+    axes[index].set_ylim(4.67,11.33)
 
-    cb = figs.colorbar(heatmap,cax=axes[3])
-    cb.set_label(name_ovrlay)
 
     index=2
     axes[index].set_xlabel('Chain density, chains / nm^2')
     axes[index].set_ylabel('Chain length')
-    Z = HeatMap_all(chain_density,'chain_density',chainlength,'chainlength',0.55,'fsa',
-                     df_single_np,name_ovrlay)
+    Z = HeatMap_all(chain_density,'chain_density',chainlength,'chainlength',0.55,'fsa',df_single_np,name_overlay)
     heatmap = axes[index].imshow(Z, cmap=cmap, interpolation=inter, origin='lower',
                         extent=[min(chain_density), max(chain_density), min(chainlength)-1,
                         max(chainlength)+1], aspect="auto",alpha = 1,norm=norm)
-    
-   
-    
     booleans=[]
     fixed_fsa=0.55
-    for frac in df.fsa:
+    for frac in df['FSA'].values:
         if frac==fixed_fsa:
             booleans.append(True)
         else:
@@ -514,20 +506,21 @@ def Plot_Heatmaps_all(chainlength,chain_density,fsa,df_single_np,df,name_ovrlay,
     dis = pandas.Series(np.logical_and(booleans,booleans_dis))
     stringy = pandas.Series(np.logical_and(booleans,booleans_str))
     agg = pandas.Series(np.logical_and(booleans,booleans_agg))
-    axes[index].scatter(df[stringy].Chain_density,df[stringy].Chain_length,marker='o',
-                        color='yellow',label='Stringy',edgecolors = 'k')
-    axes[index].scatter(df[agg].Chain_density,df[agg].Chain_length,marker='v',
-                        color='k',label='Aggregated',edgecolors = 'k')
-    axes[index].scatter(df[dis].Chain_density,df[dis].Chain_length,marker='s',
-                        color='orange',label='Dispersed',edgecolors = 'k')
-    axes[index].set_title('Fsa='+ str(fixed_fsa))
+    axes[index].scatter(df[stringy]['Chain Density'],df[stringy]['Chain Length'],marker='o',
+                        color='purple',edgecolors = 'white',s=markersize,linewidth=1.5)
+    axes[index].scatter(df[agg]['Chain Density'],df[agg]['Chain Length'],marker='v',color='red',
+                        edgecolors = 'white',s=markersize,linewidth=1.5)
+    axes[index].scatter(df[dis]['Chain Density'],df[dis]['Chain Length'],marker='s',color='k',
+                        edgecolors = 'white',s=markersize,linewidth=1.5)
+    axes[index].set_title('FSA='+ str(fixed_fsa))
     axes[index].set_xlim(2.45,4.55)
-    axes[index].set_ylim(14,34)
+    axes[index].set_ylim(4.67,11.33)
 
-    #cb = figs.colorbar(,cax=axes[3])
-    #cb.set_label(name_ovrlay)
+
+    cb = figs.colorbar(heatmap,cax=axes[3])
+    cb.set_label(name_overlay)
     plt.tight_layout()
-    plt.savefig('Figures/heatmap-newmap')
+    plt.savefig('../Figures/heatmap-newmap.pdf',dpi=600)
             
     
 def HeatMap_all(arr1,name1,arr2,name2,constant,namec,df_single_np,name_of_interest):
@@ -551,12 +544,10 @@ def Get_Clrmap(c_phases,meshing,bounds):
     for i,bound in enumerate(bounds[:-1]):
         intermediates.append((bounds[i+1]-bound)/2+bound)
     intermediates = np.array(intermediates)
-    print(intermediates)
     scale = 1/(bounds.max()-bounds.min())
     
     #color region 1
     steps = np.floor((bounds[1]-bounds[0])*scale*meshing)
-    print('Region 1: ',steps)
     #inc = (c_phases[1] - c_phases[0])/steps
     for a in np.arange(0,steps):
         c_val = c_phases[0]
@@ -564,14 +555,12 @@ def Get_Clrmap(c_phases,meshing,bounds):
     
     #region intermediate
     steps = np.floor((intermediates[1]-bounds[1])*scale*meshing) 
-    print('Region 2a: ',steps)
     inc = (c_phases[1] - c_phases[0])/steps
     for a in np.arange(0,steps):
         c_val = c_phases[0] + a*inc
         colorlist.append(c_val)
         
     steps = np.floor((bounds[2]-intermediates[1])*scale*meshing) 
-    print('Region 2b: ',steps)
     inc = (c_phases[2] - c_phases[1])/steps
     for a in np.arange(0,steps):
         c_val = c_phases[1] + a*inc
@@ -579,21 +568,18 @@ def Get_Clrmap(c_phases,meshing,bounds):
         
     #color region 2
     steps = np.floor((bounds[3]-bounds[2])*scale*meshing)
-    print('Region 3: ',steps)
     for a in np.arange(0,steps):
         c_val = c_phases[2]
         colorlist.append(c_val)
         
     #region intermediate
     steps = np.floor((intermediates[3]-bounds[3])*scale*meshing)
-    print('Region 4a: ',steps)
     inc = (c_phases[3] - c_phases[2])/steps
     for a in np.arange(0,steps):
         c_val = c_phases[2] + a*inc
         colorlist.append(c_val)
         
     steps = np.floor((bounds[4]-intermediates[3])*scale*meshing) 
-    print('Region 4b: ',steps)
     inc = (c_phases[4] - c_phases[3])/steps
     for a in np.arange(0,steps):
         c_val = c_phases[3] + a*inc
@@ -602,7 +588,6 @@ def Get_Clrmap(c_phases,meshing,bounds):
     
     #color region 3
     steps = np.floor((bounds[5]-bounds[4])*scale*meshing)
-    print('Region 5: ',steps)
     for a in np.arange(0,steps):
             c_val = c_phases[4]
             colorlist.append(c_val)

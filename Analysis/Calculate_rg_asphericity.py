@@ -4,7 +4,7 @@ import os
 import scipy
 import MDAnalysis as md
 
-path = '../trajectories/single_particle'
+path = '../trajectories/single_particle/workspace'
 dcdpath = 'tnp.dcd'
 toppath = 'final.mol2'
 statepath= 'signac_statepoint.json'

@@ -1,0 +1,1 @@
+This empty directory is where you should download and copy over your trajectory information. This is where the .zip file single_particle_data.zip should be moved once accessd from 10.5281/zenodo.4042749.

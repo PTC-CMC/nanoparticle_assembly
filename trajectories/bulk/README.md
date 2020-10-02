@@ -1,0 +1,1 @@
+This empty directory is where you should download and copy over your trajectory information. This is where the zip file bulk_simulation_data.zip should be moved to. This can be accessd from 10.5281/zenodo.4042749
